@@ -1,5 +1,6 @@
-from math import log 
+from math import log
 
+# collection.counter does exactly that
 def create_dict(content):
     """
     content is in bytes
@@ -19,15 +20,15 @@ def create_dict(content):
         a[k] /= total
     return a
 
+
 def entropy(probabilities):
     """
     probabilities is a dictionnary where values are the frequency of the
-    associated key 
+    associated key
 
     Compute Shannon entropy
     """
     H = 0
     for k in probabilities.keys():
-        H += -probabilities[k]*log(probabilities[k])
+        H += -probabilities[k] * log(probabilities[k])
     return H
-    

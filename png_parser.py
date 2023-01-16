@@ -7,8 +7,8 @@ CHUNK_LENGTH_BYTES_LENGTH = 4
 CHUNK_TYPE_BYTES_LENGTH = 4
 CRC_BYTES_LENGTH = 4
 
-class PNGImage(object):
 
+class PNGImage(object):
     def __init__(self, path):
         self.path = path
         self._current_offset = 0
@@ -36,12 +36,24 @@ class PNGImage(object):
             # Computed CRC and entropy
             crc_computed = hex(binascii.crc32(chunk_type + chunk_data))
             entpy = round(entropy.entropy(entropy.create_dict(chunk_data)), 2)
-            
-            self._current_offset = MAGIC_BYTES_LENGTH + CHUNK_LENGTH_BYTES_LENGTH + CHUNK_TYPE_BYTES_LENGTH + chunk_data_length + CRC_BYTES_LENGTH
+
+            self._current_offset = (
+                MAGIC_BYTES_LENGTH
+                + CHUNK_LENGTH_BYTES_LENGTH
+                + CHUNK_TYPE_BYTES_LENGTH
+                + chunk_data_length
+                + CRC_BYTES_LENGTH
+            )
             self._current_chunk_type = chunk_type.decode()
 
-            print(self._current_chunk_type, chunk_data_length, crc, crc_computed, entpy, sep=", ")
-
+            print(
+                self._current_chunk_type,
+                chunk_data_length,
+                crc,
+                crc_computed,
+                entpy,
+                sep=", ",
+            )
 
     def _parse_chunk(self) -> None:
         """
@@ -60,15 +72,28 @@ class PNGImage(object):
 
             # Read CRC
             crc = "0x" + f.read(CRC_BYTES_LENGTH).hex()
-            
+
             # Computed CRC and entropy
             crc_computed = hex(binascii.crc32(chunk_type + chunk_data))
             entpy = round(entropy.entropy(entropy.create_dict(chunk_data)), 2)
-            
-            self._current_offset = self._current_offset + CHUNK_LENGTH_BYTES_LENGTH + CHUNK_TYPE_BYTES_LENGTH + chunk_data_length + CRC_BYTES_LENGTH
+
+            self._current_offset = (
+                self._current_offset
+                + CHUNK_LENGTH_BYTES_LENGTH
+                + CHUNK_TYPE_BYTES_LENGTH
+                + chunk_data_length
+                + CRC_BYTES_LENGTH
+            )
             self._current_chunk_type = chunk_type.decode()
-            
-            print(self._current_chunk_type, chunk_data_length, crc, crc_computed, entpy, sep=", ")
+
+            print(
+                self._current_chunk_type,
+                chunk_data_length,
+                crc,
+                crc_computed,
+                entpy,
+                sep=", ",
+            )
 
     def parse(self) -> None:
         """
@@ -91,6 +116,7 @@ def print_help() -> None:
     print("Usage:")
     print("  python3 ./parser.py [file_path]")
 
+
 def is_png(path: str) -> bool:
     """
     Check if the file pointed out by the path is a PNG
@@ -99,6 +125,7 @@ def is_png(path: str) -> bool:
         beginning = f.read(MAGIC_BYTES_LENGTH)
         png_magic_bytes = b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"
         return list(beginning) == list(png_magic_bytes)
+
 
 if __name__ == "__main__":
     # use argparse
