@@ -1,24 +1,17 @@
+import collections
 from math import log
 
-# collection.counter does exactly that
 def create_dict(content):
     """
     content is in bytes
     Creates a dictionnary containing the following associations:
         (integer [ranged between 0 and 255]: frequency in content)
     """
-    a = {}
-    total = 0
-    for elt in content:
-        total += 1
-        if elt in a.keys():
-            a[elt] += 1
-        else:
-            a[elt] = 1
-
+    a = collections.Counter(content)
+    total = a.total()
     for k in a.keys():
         a[k] /= total
-    return a
+    return dict(a)
 
 
 def entropy(probabilities):
