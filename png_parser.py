@@ -1,5 +1,6 @@
 import binascii
 import entropy
+import struct
 import sys
 
 MAGIC_BYTES_LENGTH = 8
@@ -21,8 +22,7 @@ class PNGImage(object):
         with open(self.path, "rb") as f:
             f.seek(MAGIC_BYTES_LENGTH)
             # Length of the following chunk data
-            # use struct package
-            chunk_data_length = int(f.read(CHUNK_LENGTH_BYTES_LENGTH).hex(), 16)
+            chunk_data_length = struct.unpack(">i", f.read(CHUNK_LENGTH_BYTES_LENGTH))[0]
 
             # Chunk type
             chunk_type = f.read(CHUNK_TYPE_BYTES_LENGTH)
@@ -62,7 +62,7 @@ class PNGImage(object):
         with open(self.path, "rb") as f:
             f.seek(self._current_offset)
             # Length of the following chunk data
-            chunk_data_length = int(f.read(CHUNK_LENGTH_BYTES_LENGTH).hex(), 16)
+            chunk_data_length = struct.unpack(">i", f.read(CHUNK_LENGTH_BYTES_LENGTH))[0]
 
             # Chunk type
             chunk_type = f.read(CHUNK_TYPE_BYTES_LENGTH)
