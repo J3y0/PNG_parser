@@ -1,3 +1,4 @@
+import argparse
 import binascii
 import entropy
 import struct
@@ -10,7 +11,7 @@ CRC_BYTES_LENGTH = 4
 
 
 class PNGImage(object):
-    def __init__(self, path):
+    def __init__(self, path: str):
         self.path = path
         self._current_offset = 0
         self._current_chunk_type = ""
@@ -22,7 +23,9 @@ class PNGImage(object):
         with open(self.path, "rb") as f:
             f.seek(MAGIC_BYTES_LENGTH)
             # Length of the following chunk data
-            chunk_data_length = struct.unpack(">i", f.read(CHUNK_LENGTH_BYTES_LENGTH))[0]
+            chunk_data_length = struct.unpack(">i", f.read(CHUNK_LENGTH_BYTES_LENGTH))[
+                0
+            ]
 
             # Chunk type
             chunk_type = f.read(CHUNK_TYPE_BYTES_LENGTH)
@@ -62,7 +65,9 @@ class PNGImage(object):
         with open(self.path, "rb") as f:
             f.seek(self._current_offset)
             # Length of the following chunk data
-            chunk_data_length = struct.unpack(">i", f.read(CHUNK_LENGTH_BYTES_LENGTH))[0]
+            chunk_data_length = struct.unpack(">i", f.read(CHUNK_LENGTH_BYTES_LENGTH))[
+                0
+            ]
 
             # Chunk type
             chunk_type = f.read(CHUNK_TYPE_BYTES_LENGTH)
@@ -127,17 +132,23 @@ def is_png(path: str) -> bool:
         return list(beginning) == list(png_magic_bytes)
 
 
-if __name__ == "__main__":
-    # use argparse
-    if len(sys.argv) != 2:
-        print_help()
-        # use main function returning an int
-        sys.exit(0)
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Parse the different chunks of a PNG image"
+    )
+    parser.add_argument("filename", help="File path", type=str)
 
-    image_path = sys.argv[1]
+    args = parser.parse_args()
+
+    image_path = args.filename
     if not is_png(image_path):
         print("Error, not a PNG file")
-        sys.exit(0)
+        return 1
 
     my_png = PNGImage(image_path)
     my_png.parse()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,6 +1,7 @@
 import collections
 from math import log
 
+
 def create_dict(content):
     """
     content is in bytes
